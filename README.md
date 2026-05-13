@@ -38,7 +38,13 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 ```
+### Create manual tun0
+```
+sudo ip tuntap add dev tun0 mode tun user user_name
 
+sudo ip addr add 10.0.0.1/24 dev tun0
+sudo ip link set dev tun0 up
+```
 ## How it Works
 
 1.  **`create_tun`**: Uses `TUNSETIFF` to register a new device with the kernel.
