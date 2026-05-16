@@ -129,3 +129,19 @@ pub fn checksum(data: &[u8]) -> u16 {
     }
     !(sum as u16)
 }
+
+pub fn checksum_bitmask(data: &[u8]) -> u16 {
+    let mut sum: u32 = data
+        .chunks_exact(2)
+        .map(|chunk| u16::from_be_bytes([chunk[0], chunk[1]]) as u32)
+        .sum();
+
+    if let [odd_byte] = data.chunks_exact(2).remainder() {
+        sum += (*odd_byte as u32) << 8;
+    }
+
+    sum = (sum & 0xFFFF) + (sum >> 16);
+    sum += sum >> 16;
+
+    !(sum as u16)
+}
